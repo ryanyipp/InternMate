@@ -1,0 +1,105 @@
+### Register a new user
+POST http://localhost:3000/api/users/register
+Content-Type: application/json
+
+{
+  "username": "Fatty",
+  "email": "skibidi@example.com",
+  "password": "Pass123!"
+}
+
+### Update Username
+PATCH http://localhost:3000/api/users/Fatty
+Content-Type: application/json
+
+{
+    "newUsername": "Beluga" 
+}
+
+### Update Email
+PATCH http://localhost:3000/api/users/Beluga
+Content-Type: application/json
+
+{
+    "email": "belugas@example.com"
+}
+
+### Update Password
+PATCH http://localhost:3000/api/users/Beluga
+Content-Type: application/json
+
+{
+    "oldPassword": "Pass123!",
+    "newPassword": "Newpass456!"
+}
+
+### Multiple Updates
+PATCH http://localhost:3000/api/users/testuser
+Content-Type: application/json
+
+{
+    "newUsername": "brandnewname",
+    "email": "brand@new.email",
+    "oldPassword": "Password123!",
+    "newPassword": "Newpassword456!"
+}
+
+### Delete user
+DELETE http://localhost:3000/api/users/testuser
+
+
+### Login
+# @name login
+POST http://localhost:3000/api/users/login
+Content-Type: application/json
+
+{
+  "email": "belugas@example.com",
+  "password": "Pass123!"
+}
+
+### Create internship
+POST http://localhost:3000/api/internships
+Content-Type: application/json
+
+{
+  "user": "6845a53128fda97d26c3dae2",
+  "company": "Google",
+  "position": "Back End Developer Intern",
+  "applicationDate": "2025-06-05",
+  "status": "Withdrawn",
+  "comments": "Applied through university career portal. Recruiter said they'll get back within 2 weeks.",
+  "links": [
+    {
+      "label": "Job Posting",
+      "url": "https://careers.microsoft.com/job/54321"
+    }
+  ]
+}
+
+### Update Status
+PATCH http://localhost:3000/api/Beluga/internship/6845ad1524ebeb2a2fb4efc2/status
+Content-Type: application/json
+
+{
+  "status": "Accepted"
+}
+
+### Update Details
+PATCH http://localhost:3000/api/Beluga/internship/684688817ba51f275a155c88
+Content-Type: application/json
+
+{
+  "position": "Senior Software Engineer Intern",
+  "comments": "Followed up with recruiter, interview scheduled for next week.",
+  "links": [
+    {
+      "label": "Follow-up Email",
+      "url": "https://mail.example.com/sent/12345"
+    }
+  ]
+}
+
+### Delete internship
+DELETE http://localhost:3000/api/Beluga/internship/684688887ba51f275a155c8e
+
