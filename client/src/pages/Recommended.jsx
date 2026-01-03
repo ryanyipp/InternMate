@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import useDarkMode from "../hooks/useDarkMode";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/NavBar";
 import { getExternalInternships, getRecommendedInternships, createInternship } from "../api/index";
 import { 
   transformExternalJob, 

@@ -22,7 +22,7 @@ import { toast } from "react-toastify";
 import { createInternship } from "../api/index";
 import { updateInternship } from "../api/index";
 import { dismissFollowUp, updateFollowUp } from "../api/index";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/NavBar";
 import FollowUpNotif from "../components/FollowUpNotif.jsx";
 import { getThemeColors, getThemeShadows } from "../utils/theme";
 import { getUserById } from "../api/index.js";
