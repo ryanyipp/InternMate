@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import InputField from '../components/InputField'
 import PasswordField from '../components/PasswordField'
-import forgotImage from '../assets/forget.svg'
+import forgetIcon from "../assets/forget.svg";
 import { motion } from 'framer-motion'
 import { toast, ToastContainer } from 'react-toastify'
 import { forgotPassword } from '../api/index.js'
