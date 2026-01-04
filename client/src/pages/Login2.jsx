@@ -78,9 +78,10 @@ const Login2 = () => {
         <div className="max-w-[630px] sm:w-[80%] px-6 py-10 bg-white shadow-lg rounded-2xl space-y-6">
           {/* Header */}
           <div className="mb-4 text-center">
-            <h2 className="font-bold text-2xl sm:text-3xl md:text-4xl">
-              HUSTLE <span className="bg-blue-600 text-white px-2 rounded-md">HUB</span>
-            </h2>
+              <h2 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+  HUSTLE HUB
+  <span className="ml-2 text-sm text-indigo-500">v2</span>
+</h2>
           </div>
 
           <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold text-center text-gray-700 mb-6">
