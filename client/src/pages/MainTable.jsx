@@ -46,7 +46,7 @@ const InternshipTable = () => {
   const handleLogout = () => {
     localStorage.removeItem("profile");
     sessionStorage.removeItem("profile");
-    navigate("/login");
+    navigate("/landing");
     toast.success("Successfully logged out");
   };
 

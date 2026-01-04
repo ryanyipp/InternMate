@@ -32,9 +32,9 @@ function App() {
     <>
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-          {/* Public Routes */}
+          {/* Landing */}
           <Route
-            path="/"
+            path="/landing"
             element={
               isAuthed ? (
                 <Navigate to="/dashboard" replace />
@@ -43,28 +43,27 @@ function App() {
               )
             }
           />
-          <Route path="/login" element={<Login2 />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgot" element={<ForgotPassword />} />
+
+          {/* Auth */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={isAuthed ? <Navigate to="/dashboard" replace /> : <Login2 />} />
+          <Route path="/signup" element={isAuthed ? <Navigate to="/dashboard" replace /> : <Signup />} />
+          <Route path="/forgot" element={isAuthed ? <Navigate to="/dashboard" replace /> : <ForgotPassword />} />
 
           {/* Private Routes */}
           <Route element={<PrivateRoute />}>
             <Route
               path="/dashboard"
-              element={
-                <InternshipTable isDark={isDark} toggleDarkMode={toggleDarkMode} />
-              }
+              element={<InternshipTable isDark={isDark} toggleDarkMode={toggleDarkMode} />}
             />
             <Route
               path="/recommended"
-              element={
-                <Recommended isDark={isDark} toggleDarkMode={toggleDarkMode} />
-              }
+              element={<Recommended isDark={isDark} toggleDarkMode={toggleDarkMode} />}
             />
           </Route>
 
           {/* Catch-all */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/landing" replace />} />
         </Routes>
       </AnimatePresence>
 
