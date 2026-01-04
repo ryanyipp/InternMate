@@ -63,7 +63,7 @@ const ForgotPassword = () => {
                     <div className="max-w-[630px] sm:w-[80%] px-6 py-10 bg-white shadow-lg rounded-2x1 space-y-6">
                         <div className="mb-4 text-center">
                             <h2 className="font-bold text-2xl sm:text-3xl md:text-4xl">
-                                HUSTLE <span className="bg-blue-600 text-white px-2 rounded-md">HUB</span>
+                                INTERN<span className="bg-blue-600 text-white px-2 rounded-md">MATE</span>
                             </h2>
                             <p className="text-gray-600 mt-2 text-sm sm:text-base">
                                 Enter your email and new password below.

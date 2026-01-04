@@ -86,9 +86,9 @@ const Signup = () => {
           <div className="w-full max-w-md bg-white shadow-md rounded-lg px-6 py-8">
             <div className="mb-6 text-center">
               <h2 className="font-bold text-3xl">
-                HUSTLE{" "}
+                INTERN{" "}
                 <span className="bg-blue-600 text-white px-2 rounded-md">
-                  HUB
+                  MATE
                 </span>
               </h2>
             </div>
