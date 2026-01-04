@@ -45,7 +45,7 @@ function App() {
           />
 
           {/* Auth */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/" element={<Navigate to="/landing" replace />} />
           <Route path="/login" element={isAuthed ? <Navigate to="/dashboard" replace /> : <Login2 />} />
           <Route path="/signup" element={isAuthed ? <Navigate to="/dashboard" replace /> : <Signup />} />
           <Route path="/forgot" element={isAuthed ? <Navigate to="/dashboard" replace /> : <ForgotPassword />} />
