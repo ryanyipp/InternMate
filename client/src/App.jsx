@@ -1,4 +1,5 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Login2 from "./pages/Login2";
 import Signup from "./pages/Signup";
 import { AnimatePresence } from "framer-motion";
@@ -7,28 +8,66 @@ import ForgotPassword from "./pages/ForgetPassword";
 import InternshipTable from "./pages/MainTable";
 import PrivateRoute from "./components/PrivateRoute";
 import Recommended from "./pages/Recommended";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
   const location = useLocation();
+
+  // Auth redirect from landing
+  const isAuthed = !!localStorage.getItem("token"); // change key if needed
+
+  // Dark mode state (persisted)
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem("isDark");
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  const toggleDarkMode = () => setIsDark((prev) => !prev);
+
+  useEffect(() => {
+    localStorage.setItem("isDark", JSON.stringify(isDark));
+  }, [isDark]);
+
   return (
     <>
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           {/* Public Routes */}
-          <Route path="/" element={<Login2 />} />
+          <Route
+            path="/"
+            element={
+              isAuthed ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <LandingPage isDark={isDark} toggleDarkMode={toggleDarkMode} />
+              )
+            }
+          />
           <Route path="/login" element={<Login2 />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot" element={<ForgotPassword />} />
 
           {/* Private Routes */}
           <Route element={<PrivateRoute />}>
-            <Route path="/dashboard" element={<InternshipTable />} />
-            <Route path="/recommended" element={<Recommended />} />
+            <Route
+              path="/dashboard"
+              element={
+                <InternshipTable isDark={isDark} toggleDarkMode={toggleDarkMode} />
+              }
+            />
+            <Route
+              path="/recommended"
+              element={
+                <Recommended isDark={isDark} toggleDarkMode={toggleDarkMode} />
+              }
+            />
           </Route>
+
+          {/* Catch-all */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AnimatePresence>
 
-      {/* Global toast notification container */}
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -42,4 +81,5 @@ function App() {
     </>
   );
 }
+
 export default App;
