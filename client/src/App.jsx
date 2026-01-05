@@ -1,22 +1,24 @@
 import { useEffect, useState } from "react";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
-import Login2 from "./pages/Login2";
-import Signup from "./pages/Signup";
 import { AnimatePresence } from "framer-motion";
 import { ToastContainer } from "react-toastify";
+
+import Login2 from "./pages/Login2";
+import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgetPassword";
 import InternshipTable from "./pages/MainTable";
 import PrivateRoute from "./components/PrivateRoute";
 import Recommended from "./pages/Recommended";
 import LandingPage from "./pages/LandingPage";
 
+import wallpaperLight from "./assets/wall.jpg";
+import wallpaperDark from "./assets/wall-dark.jpg";
+
 function App() {
   const location = useLocation();
 
-  // Auth redirect from landing
-  const isAuthed = !!localStorage.getItem("token"); // change key if needed
+  const isAuthed = !!localStorage.getItem("token");
 
-  // Dark mode state (persisted)
   const [isDark, setIsDark] = useState(() => {
     const saved = localStorage.getItem("isDark");
     return saved ? JSON.parse(saved) : false;
@@ -28,11 +30,18 @@ function App() {
     localStorage.setItem("isDark", JSON.stringify(isDark));
   }, [isDark]);
 
+  // ✅ Preload wallpapers (INSIDE component)
+  useEffect(() => {
+    [wallpaperLight, wallpaperDark].forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
   return (
     <>
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-          {/* Landing */}
           <Route
             path="/landing"
             element={
@@ -44,13 +53,20 @@ function App() {
             }
           />
 
-          {/* Auth */}
           <Route path="/" element={<Navigate to="/landing" replace />} />
-          <Route path="/login" element={isAuthed ? <Navigate to="/dashboard" replace /> : <Login2 />} />
-          <Route path="/signup" element={isAuthed ? <Navigate to="/dashboard" replace /> : <Signup />} />
-          <Route path="/forgot" element={isAuthed ? <Navigate to="/dashboard" replace /> : <ForgotPassword />} />
+          <Route
+            path="/login"
+            element={isAuthed ? <Navigate to="/dashboard" replace /> : <Login2 />}
+          />
+          <Route
+            path="/signup"
+            element={isAuthed ? <Navigate to="/dashboard" replace /> : <Signup />}
+          />
+          <Route
+            path="/forgot"
+            element={isAuthed ? <Navigate to="/dashboard" replace /> : <ForgotPassword />}
+          />
 
-          {/* Private Routes */}
           <Route element={<PrivateRoute />}>
             <Route
               path="/dashboard"
@@ -62,7 +78,6 @@ function App() {
             />
           </Route>
 
-          {/* Catch-all */}
           <Route path="*" element={<Navigate to="/landing" replace />} />
         </Routes>
       </AnimatePresence>

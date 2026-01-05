@@ -101,7 +101,7 @@ const Navbar = ({
                 if (location.pathname !== "/recommended") onHoverOut(e);
               }}
             >
-              Recommendations
+              Status Breakdown
               {location.pathname === "/recommended" && (
                 <div
                   className="absolute bottom-0 left-0 w-full h-0.5 rounded-full transition-all duration-300"
