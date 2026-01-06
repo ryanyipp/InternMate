@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import Navbar from "../components/NavBar";
 import { getThemeColors } from "../utils/theme";
 import { getInternship } from "../api/index";
+import { CartesianGrid, Area, AreaChart } from "recharts";
+
 
 import {
   PieChart,
@@ -27,14 +29,27 @@ import {
   TrophyIcon,
 } from "@heroicons/react/24/outline";
 
-const STATUS_COLORS = [
-  "#60A5FA",
-  "#A78BFA",
-  "#FB923C",
-  "#34D399",
-  "#F87171",
-  "#FBBF24",
-];
+const STATUS_COLOR_MAP = {
+  Accepted: "#10B981",   // green
+  Rejected: "#EF4444",   // red
+  Pending:  "#F59E0B",   // orange
+  "Follow Up": "#3B82F6",// blue
+  Withdrawn: "#6B7280",  // grey
+  Unknown: "#9CA3AF",
+};
+const normalizeStatus = (s) => {
+  const raw = (s || "Unknown").trim();
+  const lower = raw.toLowerCase();
+
+  if (lower === "follow up" || lower === "follow-up" || lower === "followup") return "Follow Up";
+  if (lower === "withdrawn" || lower === "withdraw") return "Withdrawn";
+  if (lower === "accepted" || lower === "offer" || lower === "offered") return "Accepted";
+  if (lower === "rejected" || lower === "reject") return "Rejected";
+  if (lower === "pending") return "Pending";
+
+  // fallback: Title Case unknown statuses
+  return raw.charAt(0).toUpperCase() + raw.slice(1);
+};
 
 export default function Recommended({ isDark, toggleDarkMode }) {
   const colors = getThemeColors(isDark);
@@ -115,7 +130,7 @@ export default function Recommended({ isDark, toggleDarkMode }) {
     // Status breakdown (group by status)
     const statusMap = new Map();
     for (const a of current) {
-      const k = (a.status || "Unknown").trim() || "Unknown";
+      const k = normalizeStatus(a.status);
       statusMap.set(k, (statusMap.get(k) || 0) + 1);
     }
     const statusBreakdown = Array.from(statusMap.entries())
@@ -265,23 +280,16 @@ export default function Recommended({ isDark, toggleDarkMode }) {
                       outerRadius={105}
                       paddingAngle={2}
                     >
-                      {(metrics.statusBreakdown.length ? metrics.statusBreakdown : [{ name: "No data", value: 1 }]).map(
-                        (_, i) => (
+                      {(metrics.statusBreakdown.length ? metrics.statusBreakdown : [{ name: "Unknown", value: 1 }]).map(
+                        (entry, i) => (
                           <Cell
-                            key={i}
-                            fill={metrics.statusBreakdown.length ? STATUS_COLORS[i % STATUS_COLORS.length] : colors.muted}
+                            key={`${entry.name}-${i}`}
+                            fill={STATUS_COLOR_MAP[entry.name] || STATUS_COLOR_MAP.Unknown}
                           />
                         )
                       )}
                     </Pie>
-                    <Tooltip
-                      contentStyle={{
-                        background: colors.card,
-                        border: `1px solid ${colors.border}`,
-                        borderRadius: 12,
-                        color: colors.foreground,
-                      }}
-                    />
+                    <Tooltip content={<ThemedTooltip colors={colors} />} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
@@ -363,32 +371,65 @@ export default function Recommended({ isDark, toggleDarkMode }) {
 
           {/* TREND */}
           <div className="rounded-2xl border p-5" style={cardStyle}>
-            <h4 className="font-semibold text-lg mb-3" style={{ color: colors.cardForeground }}>
-              Application Trends
-            </h4>
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="font-semibold text-lg" style={{ color: colors.cardForeground }}>
+                Application Trends
+              </h4>
+              <span className="text-sm" style={{ color: colors.mutedForeground }}>
+                Last 6 months
+              </span>
+            </div>
+
             <div className="w-full h-[280px]">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={metrics.trend}>
-                  <XAxis dataKey="date" stroke={colors.mutedForeground} />
-                  <YAxis allowDecimals={false} stroke={colors.mutedForeground} />
-                  <Tooltip
-                    contentStyle={{
-                      background: colors.card,
-                      border: `1px solid ${colors.border}`,
-                      borderRadius: 12,
-                      color: colors.foreground,
-                    }}
+                <AreaChart data={metrics.trend} margin={{ top: 10, right: 12, left: 0, bottom: 0 }}>
+                  <CartesianGrid
+                    stroke={colors.border}
+                    strokeOpacity={0.35}
+                    vertical={false}
                   />
-                  <Line
+
+                  <XAxis
+                    dataKey="date"
+                    stroke={colors.mutedForeground}
+                    tick={{ fill: colors.mutedForeground, fontSize: 12 }}
+                    axisLine={{ stroke: colors.border, strokeOpacity: 0.6 }}
+                    tickLine={{ stroke: colors.border, strokeOpacity: 0.6 }}
+                  />
+
+                  <YAxis
+                    allowDecimals={false}
+                    stroke={colors.mutedForeground}
+                    tick={{ fill: colors.mutedForeground, fontSize: 12 }}
+                    axisLine={{ stroke: colors.border, strokeOpacity: 0.6 }}
+                    tickLine={{ stroke: colors.border, strokeOpacity: 0.6 }}
+                    width={30}
+                  />
+
+                  <Tooltip content={<ThemedTooltip colors={colors} />} />
+
+                  {/* soft fill so a flat line still looks “designed” */}
+                  <defs>
+                    <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={colors.primary} stopOpacity={0.25} />
+                      <stop offset="100%" stopColor={colors.primary} stopOpacity={0.02} />
+                    </linearGradient>
+                  </defs>
+
+                  <Area
+                    type="monotone"
                     dataKey="count"
                     stroke={colors.primary}
                     strokeWidth={3}
-                    dot={{ r: 4, stroke: colors.primary, fill: colors.background }}
+                    fill="url(#trendFill)"
+                    dot={{ r: 4, stroke: colors.primary, strokeWidth: 2, fill: colors.card }}
+                    activeDot={{ r: 6, stroke: colors.primary, strokeWidth: 2, fill: colors.card }}
                   />
-                </LineChart>
+                </AreaChart>
               </ResponsiveContainer>
             </div>
           </div>
+
 
           {/* keep the rest of your Recommended page below this (jobs, filters, etc) */}
         </div>
@@ -453,6 +494,46 @@ function WideStat({ label, value, sublabel, Icon, colors }) {
           </p>
         ) : null}
       </div>
+    </div>
+  );
+}
+function ThemedTooltip({ active, payload, label, colors }) {
+  if (!active || !payload || !payload.length) return null;
+
+  return (
+    <div
+      style={{
+        background: colors.card,
+        border: `1px solid ${colors.border}`,
+        borderRadius: 12,
+        padding: "10px 12px",
+        color: colors.foreground,
+        boxShadow: "0 12px 32px rgba(0,0,0,0.45)",
+        backdropFilter: "blur(6px)",
+      }}
+    >
+      {label ? (
+        <div style={{ color: colors.mutedForeground, fontSize: 12, marginBottom: 6 }}>
+          {label}
+        </div>
+      ) : null}
+
+      {payload.map((p, idx) => (
+        <div key={idx} style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <span
+            style={{
+              width: 10,
+              height: 10,
+              borderRadius: 999,
+              background: p.color || STATUS_COLOR_MAP[p.name] || colors.primary,
+              display: "inline-block",
+            }}
+          />
+          <span style={{ color: colors.foreground, fontSize: 13, fontWeight: 600 }}>
+            {p.name}: {p.value}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }

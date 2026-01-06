@@ -353,7 +353,7 @@ const InternshipTable = () => {
         return (
           <span
             className={baseClasses}
-            style={{ backgroundColor: colors.mutedForeground }}
+            style={{ backgroundColor: "#6B7280" }}
           >
             Withdrawn
           </span>
