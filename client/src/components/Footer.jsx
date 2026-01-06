@@ -79,8 +79,8 @@ export default function Footer({ colors }) {
         <div className="hidden md:flex items-center justify-between">
           {/* left text (old) */}
           <div>
-            <p className="text-xl font-medium py-2" style={{ color: colors.foreground }}>
-              Made by <span className="font-semibold">Ryan Yip Hui</span>
+            <p className="text-md font-medium py-2" style={{ color: colors.foreground }}>
+              Made by <span className="font-bold">Ryan Yip Hui</span>
             </p>
           </div>
 
@@ -93,7 +93,7 @@ export default function Footer({ colors }) {
               className="flex items-center gap-1.5 transition hover:scale-110"
               style={{ color: colors.mutedForeground }}
             >
-              <FaGithub size={24} /><p className="text-xl font-medium py-2" style={{ color: colors.foreground }}>
+              <FaGithub size={24} /><p className="text-md font-medium py-2" style={{ color: colors.foreground }}>
               GitHub
             </p>
             </a>
@@ -106,7 +106,7 @@ export default function Footer({ colors }) {
                 >
                 <FaLinkedin size={24} />
                 <span
-                    className="text-xl font-medium"
+                    className="text-md font-medium"
                     style={{ color: colors.foreground }}
                 >
                     LinkedIn
@@ -118,7 +118,7 @@ export default function Footer({ colors }) {
               style={{ color: colors.mutedForeground }}
             >
               <FaEnvelope size={18} /><span
-                    className="text-xl font-medium"
+                    className="text-md font-medium"
                     style={{ color: colors.foreground }}
                 >
                     Email
