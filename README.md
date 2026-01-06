@@ -12,6 +12,7 @@ This project is my own iteration and extension of **HustleHub**, an internship t
 
 **Tech used:**  
 HTML, CSS, JavaScript, React, Tailwind CSS, Node.js, Express, MongoDB, Recharts, Framer Motion
+
 This project started as a locally run tracker built during NTU SummerBuild 2025 (HustleHub) and was later re-engineered into a full web application.
 I deployed the frontend using **Vercel** and the backend using **Render**, configuring environment variables, API endpoints, and production builds to work reliably across environments.
 
