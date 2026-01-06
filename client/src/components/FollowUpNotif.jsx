@@ -57,8 +57,8 @@ const FollowUpNotif = ({ applications, isDark, onDismiss, onEdit }) => {
         <div className="flex items-center gap-2">
           <BellAlertIcon className="h-7 w-7 text-orange-500" />
           <h3
-            className="text-lg font-semibold transition-colors"
-            style={{ color: colors.foreground }}
+          className="text-base sm:text-lg font-semibold transition-colors"
+          style={{ color: colors.foreground }}
           >
             Track Follow-ups
           </h3>
@@ -67,7 +67,7 @@ const FollowUpNotif = ({ applications, isDark, onDismiss, onEdit }) => {
         <div className="flex gap-2">
           {visibleUpcoming.length > 0 && (
             <span
-              className="text-sm px-3 py-1 rounded-xl font-semibold"
+              className="text-sm px-3 py-1 rounded-md font-semibold"
               style={{ backgroundColor: "#f59e0b", color: "white" }}
             >
               Prepare: {visibleUpcoming.length}
@@ -134,59 +134,104 @@ const FollowUpNotif = ({ applications, isDark, onDismiss, onEdit }) => {
                 />
 
                 {/* Icon and Content */}
-                <div className="flex items-center p-3 gap-4 w-full">
-                  {/* Icon */}
-                  <div>{icon}</div>
+                <div className="flex flex-col sm:flex-row sm:items-center p-3 gap-3 sm:gap-4 w-full">
+                  {/* Top row (mobile): icon + text, Desktop: still inline */}
+                  <div className="flex items-start sm:items-center gap-3 sm:gap-4 w-full">
+                    {/* Icon */}
+                    <div className="shrink-0">{icon}</div>
 
-                  {/* Text */}
-                  <div className="flex-1">
-                    <h4
-                      className="font-semibold text-base"
-                      style={{ color: colors.foreground }}
-                    >
-                      {app.company}
-                    </h4>
-                    <p
-                      className="text-sm"
-                      style={{ color: colors.mutedForeground }}
-                    >
-                      {app.position} — {message}
-                    </p>
-                    <div
-                      className="text-xs"
-                      style={{ color: colors.mutedForeground }}
-                    >
-                      Follow-up Date:{" "}
-                      {followUpDate.toLocaleDateString("en-GB")}
+                    {/* Text */}
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-base" style={{ color: colors.foreground }}>
+                        {app.company}
+                      </h4>
+                      <p className="text-sm" style={{ color: colors.mutedForeground }}>
+                        {app.position} — {message}
+                      </p>
+                      <div className="text-xs" style={{ color: colors.mutedForeground }}>
+                        Follow-up Date: {followUpDate.toLocaleDateString("en-GB")}
+                      </div>
+                    </div>
+
+                    {/* Desktop buttons (right side) */}
+                    <div className="hidden sm:flex gap-2 items-center">
+                      <button
+                        onClick={async () => {
+                          try {
+                            await dismissFollowUp(app._id);
+                            setDismissedIds((prev) => [...prev, app._id]);
+                          } catch (error) {
+                            console.error("Dismiss failed", error);
+                          }
+                        }}
+                        className="px-3 py-1 text-sm font-semibold rounded-lg transition-all duration-200 hover:scale-105 active:scale-95"
+                        style={{
+                          backgroundColor: colors.input,
+                          color: colors.mutedForeground,
+                          border: `1px solid ${colors.border}`,
+                        }}
+                      >
+                        Dismiss
+                      </button>
+
+                      <button
+                        onClick={async () => {
+                          try {
+                            await updateFollowUp(app._id, {
+                              followUpDate: app.followUpDate,
+                              status: app.status,
+                            });
+                            onEdit({
+                              ...app,
+                              applicationDate: app.applicationDate
+                                ? new Date(app.applicationDate).toISOString()
+                                : "",
+                              ...(app.followUpDate && {
+                                followUpDate: new Date(app.followUpDate).toISOString(),
+                              }),
+                            });
+                          } catch (error) {
+                            console.error("Update follow-up failed", error);
+                          }
+                        }}
+                        className="px-3 py-1 text-sm font-semibold rounded-lg transition-all duration-200 hover:scale-105 active:scale-95"
+                        style={{
+                          backgroundColor: colors.primary,
+                          color: colors.primaryForeground,
+                        }}
+                      >
+                        Update
+                      </button>
                     </div>
                   </div>
 
-                  {/* Buttons */}
-                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-1 items-end sm:items-center">
+                  {/* Mobile buttons (bottom, side-by-side) */}
+                  <div className="flex sm:hidden gap-2 pt-2">
                     <button
                       onClick={async () => {
                         try {
                           await dismissFollowUp(app._id);
-                            setDismissedIds(prev => [...prev, app._id]);
+                          setDismissedIds((prev) => [...prev, app._id]);
                         } catch (error) {
                           console.error("Dismiss failed", error);
                         }
                       }}
-                      className="px-3 py-1 text-sm font-semibold rounded-lg transition-all duration-200 hover:scale-105 active:scale-95"
+                      className="flex-1 px-3 py-2 text-sm font-semibold rounded-lg"
                       style={{
                         backgroundColor: colors.input,
                         color: colors.mutedForeground,
-                        border: `1px solid ${colors.border}`
+                        border: `1px solid ${colors.border}`,
                       }}
                     >
                       Dismiss
                     </button>
+
                     <button
                       onClick={async () => {
                         try {
                           await updateFollowUp(app._id, {
                             followUpDate: app.followUpDate,
-                            status: app.status
+                            status: app.status,
                           });
                           onEdit({
                             ...app,
@@ -194,17 +239,17 @@ const FollowUpNotif = ({ applications, isDark, onDismiss, onEdit }) => {
                               ? new Date(app.applicationDate).toISOString()
                               : "",
                             ...(app.followUpDate && {
-                              followUpDate: new Date(app.followUpDate).toISOString()
-                            })
+                              followUpDate: new Date(app.followUpDate).toISOString(),
+                            }),
                           });
                         } catch (error) {
                           console.error("Update follow-up failed", error);
                         }
                       }}
-                      className="px-3 py-1 text-sm font-semibold rounded-lg transition-all duration-200 hover:scale-105 active:scale-95"
+                      className="flex-1 px-3 py-2 text-sm font-semibold rounded-lg"
                       style={{
                         backgroundColor: colors.primary,
-                        color: colors.primaryForeground
+                        color: colors.primaryForeground,
                       }}
                     >
                       Update

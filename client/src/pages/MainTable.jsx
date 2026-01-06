@@ -326,7 +326,13 @@ const InternshipTable = () => {
 
   const getStatusBadge = (status) => {
     const baseClasses =
-      "px-3 py-1 rounded-full text-white text-[15px] font-semibold";
+      `
+      text-white font-semibold
+      px-3 py-1 text-[15px] rounded-full     /* desktop */
+      sm:px-3 sm:py-1 sm:text-[15px]         /* desktop lock */
+      px-4 py-2.5 text-md rounded-lg          /* mobile */
+      min-w-[96px] text-center
+      `;
 
     if (!status || typeof status !== "string") {
       return (
@@ -419,11 +425,11 @@ const InternshipTable = () => {
         }}
       >
         <div
-          className="scale-[0.90] max-w-8xl w-full  mx-auto rounded-3xl shadow-xl px-6 py-3 flex flex-col transition-all duration-100"
+          className="w-full max-w-8xl lg:scale-[0.90] lg:origin-top mx-auto rounded-3xl shadow-xl px-4 sm:px-6 py-3 flex flex-col transition-all duration-100"
           style={{
             backgroundColor: colors.card,
             boxShadow: colors.shadows,
-            border: `1px solid ${colors.border}`
+            border: `1px solid ${colors.border}`,
           }}
         >
           {commentToView && (
@@ -438,10 +444,10 @@ const InternshipTable = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.15, delay: 0.02 }}
-            className="flex items-stretch gap-6 mb-6"
+            className="flex flex-col lg:flex-row items-stretch gap-4 lg:gap-6 mb-6"
           >
             {/* Left Section - 70% */}
-            <div className="w-[65%] flex flex-col gap-4">
+            <div className="w-full lg:w-[65%] flex flex-col gap-4">
               {/* Motivational Header */}
               <div className="text-left">
                 <h1
@@ -503,77 +509,36 @@ const InternshipTable = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.15, delay: 0.01 }}
-                className="flex flex-wrap justify-between items-center mb-1 gap-4"
+                className="mb-1"
               >
-                <div className="flex flex-wrap gap-4 items-center">
-                  <div className="relative">
-                    <MagnifyingGlassIcon
-                      className="w-5 h-5 absolute left-3 top-3.75 transition-colors"
-                      style={{ color: colors.mutedForeground }}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Search companies..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 pr-4 py-3 shadow-sm rounded-2xl w-56 border transition-all duration-100 focus:ring-2 focus:ring-primary focus:outline-none"
-                      style={{
-                        backgroundColor: colors.input,
-                        borderColor: colors.border,
-                        color: colors.foreground,
-                      }}
-                    />
-                  </div>
-
-                    <Listbox value={statusFilter} onChange={setStatusFilter}>
-                    <div className="relative w-44">
-                      <Listbox.Button
-                        className="w-full flex items-center gap-2 rounded-2xl px-4 py-3 shadow-sm border transition-all duration-150 hover:shadow-md"
+                {/* ===================== */}
+                {/* DESKTOP (unchanged)   */}
+                {/* ===================== */}
+                <div className="hidden lg:flex flex-wrap justify-between items-center gap-4">
+                  <div className="flex flex-wrap gap-4 items-center">
+                    {/* Search */}
+                    <div className="relative">
+                      <MagnifyingGlassIcon
+                        className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2"
+                        style={{ color: colors.mutedForeground }}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Search companies..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 pr-4 py-3 shadow-sm rounded-2xl w-56 border transition-all duration-100 focus:ring-2 focus:ring-primary focus:outline-none"
                         style={{
                           backgroundColor: colors.input,
                           borderColor: colors.border,
                           color: colors.foreground,
                         }}
-                      >
-                        <ClipboardDocumentCheckIcon className="w-5 h-5" style={{ color: colors.mutedForeground }} />
-                        <span className="flex-1 text-left">
-                          {statusOptions.find(o => o.value === statusFilter)?.label ?? "All Status"}
-                        </span>
-                        <ChevronDownIcon className="w-4 h-4" style={{ color: colors.mutedForeground }} />
-                      </Listbox.Button>
-
-                      <Listbox.Options
-                        className="absolute z-50 mt-2 w-full rounded-2xl shadow-lg border overflow-hidden"
-                        style={{
-                          backgroundColor: colors.card,
-                          borderColor: colors.border,
-                        }}
-                      >
-                        {statusOptions.map((option) => (
-                          <Listbox.Option key={option.value} value={option.value}>
-                            {({ active, selected }) => (
-                              <div
-                                className={`cursor-pointer px-4 py-2 transition-colors ${
-                                  active ? "bg-blue-50" : ""}`}
-                                style={{
-                                  color: active
-                                    ? "#2563eb"
-                                    : selected
-                                    ? colors.foreground
-                                    : colors.mutedForeground,
-                                  fontWeight: selected ? 600 : 400,}}>
-                                {option.label}
-                              </div>)}
-                          </Listbox.Option>
-                        ))}
-                      </Listbox.Options>
+                      />
                     </div>
-                  </Listbox>
 
-
-                    <Listbox value={dateFilter} onChange={setDateFilter}>
-                      <div className="relative w-46">
-                        {/* Button */}
+                    {/* Status */}
+                    <Listbox value={statusFilter} onChange={setStatusFilter}>
+                      <div className="relative w-44">
                         <Listbox.Button
                           className="w-full flex items-center gap-2 rounded-2xl px-4 py-3 shadow-sm border transition-all duration-150 hover:shadow-md"
                           style={{
@@ -582,74 +547,261 @@ const InternshipTable = () => {
                             color: colors.foreground,
                           }}
                         >
-                          <CalendarDaysIcon className="w-5 h-5" />
+                          <ClipboardDocumentCheckIcon
+                            className="w-5 h-5"
+                            style={{ color: colors.mutedForeground }}
+                          />
                           <span className="flex-1 text-left">
-                            {dateOptions.find(o => o.value === dateFilter)?.label}
+                            {statusOptions.find((o) => o.value === statusFilter)?.label ?? "All Status"}
                           </span>
-                          <ChevronDownIcon className="w-4 h-4" />
+                          <ChevronDownIcon className="w-4 h-4" style={{ color: colors.mutedForeground }} />
                         </Listbox.Button>
 
-                        {/* Options */}
                         <Listbox.Options
                           className="absolute z-50 mt-2 w-full rounded-2xl shadow-lg border overflow-hidden"
-                          style={{
-                            backgroundColor: colors.card,
-                            borderColor: colors.border,}}>
-                              
-                          {dateOptions.map((option) => (
+                          style={{ backgroundColor: colors.card, borderColor: colors.border }}
+                        >
+                          {statusOptions.map((option) => (
                             <Listbox.Option key={option.value} value={option.value}>
-                          {({ active, selected }) => (
-                            <div
-                              className={`cursor-pointer px-4 py-2 transition-colors ${
-                                active ? "bg-blue-50" : ""
-                              }`}
-                              style={{
-                                color: active
-                                  ? "#2563eb"
-                                  : selected
-                                  ? colors.foreground
-                                  : colors.mutedForeground,
-                                fontWeight: selected ? 600 : 400,}}>
-                              {option.label}
-                            </div>
-                          )}
-                        </Listbox.Option>))}
+                              {({ active, selected }) => (
+                                <div
+                                  className="cursor-pointer px-4 py-2 transition-colors"
+                                  style={{
+                                    backgroundColor: active ? colors.accent : "transparent",
+                                    color: selected ? colors.foreground : colors.mutedForeground,
+                                    fontWeight: selected ? 600 : 400,
+                                  }}
+                                >
+                                  {option.label}
+                                </div>
+                              )}
+                            </Listbox.Option>
+                          ))}
                         </Listbox.Options>
                       </div>
-                    </Listbox>        
+                    </Listbox>
 
-                  {/* Add Entry Button */}
+                    {/* Date */}
+                    <Listbox value={dateFilter} onChange={setDateFilter}>
+                      <div className="relative w-46">
+                        <Listbox.Button
+                          className="w-full flex items-center gap-2 rounded-2xl px-4 py-3 shadow-sm border transition-all duration-150 hover:shadow-md"
+                          style={{
+                            backgroundColor: colors.input,
+                            borderColor: colors.border,
+                            color: colors.foreground,
+                          }}
+                        >
+                          <CalendarDaysIcon className="w-5 h-5" style={{ color: colors.mutedForeground }} />
+                          <span className="flex-1 text-left">
+                            {dateOptions.find((o) => o.value === dateFilter)?.label}
+                          </span>
+                          <ChevronDownIcon className="w-4 h-4" style={{ color: colors.mutedForeground }} />
+                        </Listbox.Button>
+
+                        <Listbox.Options
+                          className="absolute z-50 mt-2 w-full rounded-2xl shadow-lg border overflow-hidden"
+                          style={{ backgroundColor: colors.card, borderColor: colors.border }}
+                        >
+                          {dateOptions.map((option) => (
+                            <Listbox.Option key={option.value} value={option.value}>
+                              {({ active, selected }) => (
+                                <div
+                                  className="cursor-pointer px-4 py-2 transition-colors"
+                                  style={{
+                                    backgroundColor: active ? colors.accent : "transparent",
+                                    color: selected ? colors.foreground : colors.mutedForeground,
+                                    fontWeight: selected ? 600 : 400,
+                                  }}
+                                >
+                                  {option.label}
+                                </div>
+                              )}
+                            </Listbox.Option>
+                          ))}
+                        </Listbox.Options>
+                      </div>
+                    </Listbox>
+
+                    {/* Add */}
+                    {activeTab === "current" && (
+                      <motion.button
+                        onClick={handleAddEntry}
+                        className="px-6 py-3 rounded-2xl shadow-sm transition-all duration-100 hover:scale-102 active:scale-95 font-semibold"
+                        style={{
+                          backgroundColor: colors.primary,
+                          color: colors.primaryForeground,
+                          boxShadow: shadows.sm,
+                        }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        + Add New Entry
+                      </motion.button>
+                    )}
+                  </div>
+                </div>
+
+                {/* ===================== */}
+                {/* MOBILE/TABLET (new)   */}
+                {/* ===================== */}
+                <div className="lg:hidden grid grid-cols-2 sm:grid-cols-2 gap-3">
+                  {/* Search full */}
+                  <div className="relative col-span-2">
+                    <MagnifyingGlassIcon
+                      className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2"
+                      style={{ color: colors.mutedForeground }}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Search companies..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2.5 text-sm shadow-sm rounded-xl border focus:ring-2 focus:ring-primary focus:outline-none"
+                      style={{
+                        backgroundColor: colors.input,
+                        borderColor: colors.border,
+                        color: colors.foreground,
+                      }}
+                    />
+                  </div>
+
+                  {/* Status */}
+                  <div className="w-full">
+                    <Listbox value={statusFilter} onChange={setStatusFilter}>
+                      <div className="relative w-full">
+                        <Listbox.Button
+                          className="w-full flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm shadow-sm border"
+                          style={{
+                            backgroundColor: colors.input,
+                            borderColor: colors.border,
+                            color: colors.foreground,
+                          }}
+                        >
+                          <ClipboardDocumentCheckIcon className="w-5 h-5" style={{ color: colors.mutedForeground }} />
+                          <span className="flex-1 text-left truncate">
+                            {statusOptions.find((o) => o.value === statusFilter)?.label ?? "All Status"}
+                          </span>
+                          <ChevronDownIcon className="w-4 h-4" style={{ color: colors.mutedForeground }} />
+                        </Listbox.Button>
+
+                        <Listbox.Options
+                          className="absolute z-50 mt-2 w-full rounded-xl shadow-lg border overflow-hidden"
+                          style={{ backgroundColor: colors.card, borderColor: colors.border }}
+                        >
+                          {statusOptions.map((option) => (
+                            <Listbox.Option key={option.value} value={option.value}>
+                              {({ active, selected }) => (
+                                <div
+                                  className="cursor-pointer px-4 py-2"
+                                  style={{
+                                    backgroundColor: active ? colors.accent : "transparent",
+                                    color: selected ? colors.foreground : colors.mutedForeground,
+                                    fontWeight: selected ? 600 : 400,
+                                  }}
+                                >
+                                  {option.label}
+                                </div>
+                              )}
+                            </Listbox.Option>
+                          ))}
+                        </Listbox.Options>
+                      </div>
+                    </Listbox>
+                  </div>
+
+                  {/* Date */}
+                  <div className="w-full">
+                    <Listbox value={dateFilter} onChange={setDateFilter}>
+                      <div className="relative w-full">
+                        <Listbox.Button
+                          className="w-full flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm shadow-sm border"
+                          style={{
+                            backgroundColor: colors.input,
+                            borderColor: colors.border,
+                            color: colors.foreground,
+                          }}
+                        >
+                          <CalendarDaysIcon className="w-5 h-5" style={{ color: colors.mutedForeground }} />
+                          <span className="flex-1 text-left truncate">
+                            {dateOptions.find((o) => o.value === dateFilter)?.label}
+                          </span>
+                          <ChevronDownIcon className="w-4 h-4" style={{ color: colors.mutedForeground }} />
+                        </Listbox.Button>
+
+                        <Listbox.Options
+                          className="absolute z-50 mt-2 w-full rounded-2xl shadow-lg border overflow-hidden"
+                          style={{ backgroundColor: colors.card, borderColor: colors.border }}
+                        >
+                          {dateOptions.map((option) => (
+                            <Listbox.Option key={option.value} value={option.value}>
+                              {({ active, selected }) => (
+                                <div
+                                  className="cursor-pointer px-4 py-2"
+                                  style={{
+                                    backgroundColor: active ? colors.accent : "transparent",
+                                    color: selected ? colors.foreground : colors.mutedForeground,
+                                    fontWeight: selected ? 600 : 400,
+                                  }}
+                                >
+                                  {option.label}
+                                </div>
+                              )}
+                            </Listbox.Option>
+                          ))}
+                        </Listbox.Options>
+                      </div>
+                    </Listbox>
+                  </div>
+
+                  {/* Add full */}
                   {activeTab === "current" && (
                     <motion.button
                       onClick={handleAddEntry}
-                      className="px-6 py-3 rounded-2xl shadow-sm transition-all duration-100 hover:scale-102 active:scale-95 font-semibold"
+                      className="col-span-2 w-full px-5 py-2 text-md rounded-xl font-semibold"
                       style={{
                         backgroundColor: colors.primary,
                         color: colors.primaryForeground,
                         boxShadow: shadows.sm,
                       }}
-                      whileTap={{ scale: 0.95 }}
+                      whileTap={{ scale: 0.98 }}
                     >
                       + Add New Entry
                     </motion.button>
                   )}
                 </div>
               </motion.div>
-            </div>
-            {/* Right Side: Notification (no vertical space) */}
-            <div className="w-[35%] min-w-[280px] h-full flex flex-col">
-              <FollowUpNotif
-                applications={applications}
-                isDark={isDark}
-                onDismiss={handleDismissFollowUp}
-                onEdit={(entry) => {
-                  setEditEntry(entry);
-                  setShowModal(true);
-                }}
-              />
-            </div>
-          </motion.div>
+              </div> {/* ✅ CLOSE Left Section (lg:w-[65%]) */}
 
+              {/* ✅ Right Side: Notification */}
+              <div className="w-full lg:w-[35%] lg:min-w-[280px] h-full flex flex-col">
+                <FollowUpNotif
+                  applications={applications}
+                  isDark={isDark}
+                  onDismiss={handleDismissFollowUp}
+                  onEdit={(entry) => {
+                    setEditEntry(entry);
+                    setShowModal(true);
+                  }}
+                />
+              </div>
+
+              </motion.div> {/* ✅ CLOSE header wrapper (70/30 split) */}
+              <div className="flex items-center gap-3 my-4">
+                <div
+                  className="h-px flex-1"
+                  style={{ backgroundColor: colors.border }}
+                />
+                <span
+                  className="text-xs uppercase tracking-wide font-semibold"
+                  style={{ color: colors.mutedForeground }}
+                >
+                  Applications
+                </span>
+                <div
+                  className="h-px flex-1"
+                  style={{ backgroundColor: colors.border }}
+                />
+              </div>
           {/* Main Content Container */}
           <div className="flex-1 flex flex-col">
             {/* Main Table */}
@@ -657,53 +809,71 @@ const InternshipTable = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2, delay: 0.01 }}
-              className="flex-1 rounded-2xl border overflow-hidden transition-all duration-300"
-              style={{
-                backgroundColor: colors.card,
-                borderColor: colors.border,
-                boxShadow: shadows.sm,
+                className="flex-1 rounded-2xl overflow-hidden transition-all duration-300
+           lg:border lg:bg-[var(--card-bg)]"
+            style={{
+              backgroundColor: colors.card,
+              borderColor: colors.border,
+              boxShadow: shadows.sm,
               }}
             >
-              <div className="overflow-auto h-full">
-                <table className="min-w-full">
+             {/* ===== DESKTOP (table) ===== */} <div className="hidden md:block">
+            <div className="w-full overflow-x-auto overflow-y-hidden [-webkit-overflow-scrolling:touch]">
+              {/* gives horizontal scroll on small screens while keeping desktop normal */}
+              <div className="min-w-[980px] sm:min-w-0">
+                <table className="w-full table-auto">
                   <thead>
                     <tr
-                      className="text-base text-center"
+                      className="text-sm sm:text-base text-center"
                       style={{
                         backgroundColor: colors.primary,
                         color: colors.primaryForeground,
                       }}
                     >
-                      <th className="px-6 py-4 text-left font-semibold">Company</th>
-                      <th className="px-6 py-4 font-semibold">Position</th>
-                      <th className="px-6 py-4 font-semibold">Date Applied</th>
-                      <th className="px-6 py-4 font-semibold">Status</th>
-                      <th className="px-4 py-2 font-semibold">Follow-Up Date</th>
-                      <th className="px-6 py-4 font-semibold">Resume</th>
-                      <th className="px-6 py-4 font-semibold">Comments</th>
-                      <th className="px-6 py-4 font-semibold">Link</th>
-                      <th className="px-6 py-4 font-semibold">Actions</th>
+                      <th className="px-3 py-3 sm:px-6 sm:py-4 text-left font-semibold whitespace-nowrap">
+                        Company
+                      </th>
+                      <th className="px-3 py-3 sm:px-6 sm:py-4 font-semibold whitespace-nowrap">
+                        Position
+                      </th>
+                      <th className="px-3 py-3 sm:px-6 sm:py-4 font-semibold whitespace-nowrap">
+                        Date Applied
+                      </th>
+                      <th className="px-3 py-3 sm:px-6 sm:py-4 font-semibold whitespace-nowrap">
+                        Status
+                      </th>
+                      <th className="px-3 py-3 sm:px-4 sm:py-2 font-semibold whitespace-nowrap">
+                        Follow-Up Date
+                      </th>
+                      <th className="px-3 py-3 sm:px-6 sm:py-4 font-semibold whitespace-nowrap">
+                        Resume
+                      </th>
+                      <th className="px-3 py-3 sm:px-6 sm:py-4 font-semibold whitespace-nowrap">
+                        Comments
+                      </th>
+                      <th className="px-3 py-3 sm:px-6 sm:py-4 font-semibold whitespace-nowrap">
+                        Link
+                      </th>
+                      <th className="px-3 py-3 sm:px-6 sm:py-4 font-semibold whitespace-nowrap">
+                        Actions
+                      </th>
                     </tr>
                   </thead>
 
                   <tbody>
                     {applications.length === 0 ? (
                       <tr>
+                        {/* IMPORTANT: colSpan should match your number of columns (9) */}
                         <td
-                          colSpan="8"
-                          className="text-center py-12 transition-colors"
-                          style={{
-                            color: colors.mutedForeground,
-                          }}
+                          colSpan={9}
+                          className="text-center py-10 sm:py-12 transition-colors"
+                          style={{ color: colors.mutedForeground }}
                         >
-                          <div className="flex flex-col items-center gap-4">
-                            <div className="text-6xl">📝</div>
-                            <p className="text-xl font-medium">
-                              No applications yet
-                            </p>
-                            <p className="text-base">
-                              Click "+ Add New Entry" to start tracking your
-                              applications
+                          <div className="flex flex-col items-center gap-3 sm:gap-4">
+                            <div className="text-5xl sm:text-6xl">📝</div>
+                            <p className="text-lg sm:text-xl font-medium">No applications yet</p>
+                            <p className="text-sm sm:text-base">
+                              Click “+ Add New Entry” to start tracking your applications
                             </p>
                           </div>
                         </td>
@@ -712,117 +882,111 @@ const InternshipTable = () => {
                       paginatedData.map((app, index) => (
                         <motion.tr
                           key={app._id || app.id}
-                          className="text-base border-b transition-colors duration-10 ease-out"
+                          className="text-sm sm:text-base border-b transition-colors duration-150 ease-out"
                           style={{
                             backgroundColor: colors.card,
                             color: colors.foreground,
                             borderColor: colors.border,
                           }}
-                          initial={{ opacity: 0, y: 20 }}
+                          initial={{ opacity: 0, y: 14 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.2, delay: index * 0.05 }}
-                          whileHover={{
-                            backgroundColor: colors.accent,
-                          }}
+                          transition={{ duration: 0.18, delay: index * 0.03 }}
+                          whileHover={{ backgroundColor: colors.accent }}
                         >
-                          <td className="px-6 py-4 font-medium">
+                          <td className="px-3 py-3 sm:px-6 sm:py-4 font-medium whitespace-nowrap">
                             {app.company}
                           </td>
-                          <td className="px-6 py-4 text-center">
+
+                          {/* allow position to wrap instead of forcing extra width */}
+                          <td className="px-3 py-3 sm:px-6 sm:py-4 text-center whitespace-normal">
                             {app.position}
                           </td>
-                          <td className="px-6 py-4 text-center">
-                            {new Date(app.applicationDate).toLocaleDateString(
-                              "en-GB"
-                            )}
-                          </td>
-                          <td className="px-6 py-4 text-center">
-                            {getStatusBadge(app.status)}
-                          </td>
-                          <td className="px-6 py-4 text-center">
-                            {app.followUpDate
-                              ? new Date(app.followUpDate).toLocaleDateString(
-                                  "en-GB"
-                                )
+
+                          <td className="px-3 py-3 sm:px-6 sm:py-4 text-center whitespace-nowrap">
+                            {app.applicationDate
+                              ? new Date(app.applicationDate).toLocaleDateString("en-GB")
                               : "-"}
                           </td>
-                          <td className="px-6 py-4 text-center">
+
+                          <td className="px-3 py-3 sm:px-6 sm:py-4 text-center whitespace-nowrap">
+                            {getStatusBadge(app.status)}
+                          </td>
+
+                          <td className="px-3 py-3 sm:px-6 sm:py-4 text-center whitespace-nowrap">
+                            {app.followUpDate
+                              ? new Date(app.followUpDate).toLocaleDateString("en-GB")
+                              : "-"}
+                          </td>
+
+                          <td className="px-3 py-3 sm:px-6 sm:py-4 text-center whitespace-nowrap">
                             {app.resume ? (
                               <a
                                 href={`http://localhost:3000/api/internships/${app._id}/resume`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-block underline text-sm font-medium transition-transform duration-150 hover:scale-105"
+                                className="inline-block underline text-xs sm:text-sm font-medium transition-transform duration-150 hover:scale-105"
                                 style={{ color: colors.primary }}
                               >
                                 View
                               </a>
                             ) : (
-                              <span style={{ color: colors.mutedForeground }}>
-                                -
-                              </span>
+                              <span style={{ color: colors.mutedForeground }}>-</span>
                             )}
                           </td>
-                          <td className="px-6 py-4 text-center">
+
+                          <td className="px-3 py-3 sm:px-6 sm:py-4 text-center whitespace-nowrap">
                             {app.comments ? (
                               <button
                                 onClick={() => setCommentToView(app.comments)}
-                                className="underline text-sm font-medium transition hover:scale-105"
+                                className="underline text-xs sm:text-sm font-medium transition-transform duration-150 hover:scale-105"
                                 style={{ color: colors.primary }}
                               >
-                                View Comment
+                                View
                               </button>
                             ) : (
-                              <span style={{ color: colors.mutedForeground }}>
-                                -
-                              </span>
+                              <span style={{ color: colors.mutedForeground }}>-</span>
                             )}
                           </td>
-                          <td className="px-6 py-4 text-center">
-                            {Array.isArray(app.links) &&
-                            app.links.length > 0 &&
-                            app.links[0].url ? (
+
+                          <td className="px-3 py-3 sm:px-6 sm:py-4 text-center whitespace-nowrap">
+                            {Array.isArray(app.links) && app.links.length > 0 && app.links[0]?.url ? (
                               <a
                                 href={app.links[0].url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-block underline text-sm font-medium transition-transform duration-100 hover:scale-105"
+                                className="inline-block underline text-xs sm:text-sm font-medium transition-transform duration-150 hover:scale-105"
                                 style={{ color: colors.primary }}
                               >
                                 {app.links[0].label || "Link"}
                               </a>
                             ) : (
-                              <span style={{ color: colors.mutedForeground }}>
-                                -
-                              </span>
+                              <span style={{ color: colors.mutedForeground }}>-</span>
                             )}
                           </td>
-                          <td className="px-6 py-4 text-center">
-                            <div className="flex items-center justify-center gap-3">
+
+                          {/* actions: stack on mobile, row on desktop */}
+                          <td className="px-3 py-3 sm:px-6 sm:py-4 text-center whitespace-nowrap">
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
                               <button
                                 onClick={() => {
                                   setEditEntry({
                                     ...app,
                                     applicationDate: app.applicationDate
-                                      ? new Date(
-                                          app.applicationDate
-                                        ).toISOString()
+                                      ? new Date(app.applicationDate).toISOString()
                                       : "",
                                     ...(app.followUpDate && {
-                                      followUpDate: new Date(
-                                        app.followUpDate
-                                      ).toISOString(),
+                                      followUpDate: new Date(app.followUpDate).toISOString(),
                                     }),
                                   });
                                   setShowModal(true);
                                 }}
-                                className="text-md font-semibold transition-all duration-100 hover:underline hover:scale-105 active:scale-95"
+                                className="text-sm font-semibold transition-all duration-100 hover:underline hover:scale-105 active:scale-95"
                                 style={{ color: colors.primary }}
                               >
                                 Edit
                               </button>
                               <button
-                                className="text-md font-semibold transition-all duration-100 hover:underline hover:scale-105 active:scale-95"
+                                className="text-sm font-semibold transition-all duration-100 hover:underline hover:scale-105 active:scale-95"
                                 style={{ color: colors.destructive }}
                                 onClick={() => handleDeleteEntry(app._id)}
                               >
@@ -836,6 +1000,193 @@ const InternshipTable = () => {
                   </tbody>
                 </table>
               </div>
+            </div>
+            </div>
+            {/* ===== MOBILE (cards) ===== */}
+            <div className="md:hidden space-y-3">
+              {applications.length === 0 ? (
+                <div
+                  className="text-center py-10 rounded-2xl border"
+                  style={{ borderColor: colors.border, color: colors.mutedForeground, background: colors.card }}
+                >
+                  <div className="text-5xl mb-2">📝</div>
+                  <p className="text-lg font-medium">No applications yet</p>
+                  <p className="text-sm">Tap “+ Add New Entry” to start tracking</p>
+                </div>
+              ) : (
+                paginatedData.map((app, index) => (
+                  <motion.div
+                key={app._id || app.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.18, delay: index * 0.03 }}
+                className="rounded-3xl p-4 border"
+                style={{
+                backgroundColor: isDark
+                  ? "rgba(59,130,246,0.08)"   // subtle blue for dark mode
+                  : "rgba(59,130,246,0.05)",  // very light blue for light mode
+                border: `1.5px solid ${colors.border}`,
+                boxShadow: isDark
+                  ? "0 1px 6px rgba(0,0,0,0.35)"
+                  : "0 2px 6px rgba(0,0,0,0.08)",
+              }}
+                whileHover={{
+                  y: -2,
+                }}
+              >
+                  {/* Top row: Company + Status */}
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="text-[11px] font-semibold uppercase tracking-wide"
+                          style={{ color: colors.mutedForeground }}>
+                          Company
+                        </p>
+                        <p className="text-[15px] font-semibold truncate leading-tight"
+                          style={{ color: colors.foreground }}>
+                          {app.company || "-"}
+                        </p>
+                      </div>
+                      <div className="shrink-0">{getStatusBadge(app.status)}</div>
+                    </div>
+
+                    {/* Position */}
+                    <div className="mt-2">
+                      <p className="text-[11px] under font-semibold uppercase tracking-wide"
+                        style={{ color: colors.mutedForeground }}>
+                        Position
+                      </p>
+                      <p className="text-[14px] font-medium leading-tight"
+                        style={{ color: colors.foreground }}>
+                        {app.position || "-"}
+                      </p>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="mt-3 h-px" style={{ backgroundColor: colors.border }} />
+
+                    {/* Dates */}
+                    <div className="mt-3 grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-[11px] font-semibold uppercase tracking-wide"
+                          style={{ color: colors.mutedForeground }}>
+                          Applied
+                        </p>
+                        <p className="text-[14px] font-semibold"
+                          style={{ color: colors.foreground }}>
+                          {app.applicationDate ? new Date(app.applicationDate).toLocaleDateString("en-GB") : "-"}
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-[11px] font-semibold uppercase tracking-wide"
+                          style={{ color: colors.mutedForeground }}>
+                          Follow-up
+                        </p>
+                        <p className="text-[14px] font-semibold"
+                          style={{ color: colors.foreground }}>
+                          {app.followUpDate ? new Date(app.followUpDate).toLocaleDateString("en-GB") : "-"}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="mt-3 h-px" style={{ backgroundColor: colors.border }} />
+
+                    {/* Links row */}
+                    <div className="mt-3 grid grid-cols-3 gap-3">
+                      {/* Resume */}
+                      <div>
+                        <p className="text-[11px] font-semibold uppercase tracking-wide"
+                          style={{ color: colors.mutedForeground }}>
+                          Resume
+                        </p>
+                        {app.resume ? (
+                          <a
+                            href={`http://localhost:3000/api/internships/${app._id}/resume`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[13px] font-semibold underline underline-offset-2"
+                            style={{ color: colors.primary }}
+                          >
+                            View
+                          </a>
+                        ) : (
+                          <span className="text-[13px]" style={{ color: colors.mutedForeground }}>-</span>
+                        )}
+                      </div>
+
+                      {/* Job link */}
+                      <div>
+                        <p className="text-[11px] font-semibold uppercase tracking-wide"
+                          style={{ color: colors.mutedForeground }}>
+                          Link
+                        </p>
+                        {Array.isArray(app.links) && app.links[0]?.url ? (
+                          <a
+                            href={app.links[0].url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[13px] font-semibold underline underline-offset-2"
+                            style={{ color: colors.primary }}
+                          >
+                            {app.links[0].label || "Open"}
+                          </a>
+                        ) : (
+                          <span className="text-[13px]" style={{ color: colors.mutedForeground }}>-</span>
+                        )}
+                      </div>
+
+                      {/* Comments */}
+                      <div className="text-right">
+                        <p className="text-[11px] font-semibold uppercase tracking-wide"
+                          style={{ color: colors.mutedForeground }}>
+                          Comments
+                        </p>
+                        {app.comments ? (
+                          <button
+                            onClick={() => setCommentToView(app.comments)}
+                            className="text-[13px] font-semibold underline underline-offset-2"
+                            style={{ color: colors.primary }}
+                          >
+                            View
+                          </button>
+                        ) : (
+                          <span className="text-[13px]" style={{ color: colors.mutedForeground }}>-</span>
+                        )}
+                      </div>
+                    </div>
+
+
+                    {/* Actions */}
+                    <div className="mt-4 flex gap-2">
+                      <button
+                        onClick={() => {
+                          setEditEntry({
+                            ...app,
+                            applicationDate: app.applicationDate ? new Date(app.applicationDate).toISOString() : "",
+                            ...(app.followUpDate && { followUpDate: new Date(app.followUpDate).toISOString() }),
+                          });
+                          setShowModal(true);
+                        }}
+                        className="flex-1 rounded-xl py-1.5 text-d font-semibold border"
+                        style={{ borderColor: colors.border, color: colors.primary, background: "transparent" }}
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        onClick={() => handleDeleteEntry(app._id)}
+                        className="flex-1 rounded-xl py-1.5 text-sm font-semibold"
+                        style={{ background: colors.destructive, color: "#fff" }}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </motion.div>
+                ))
+              )}
+            </div>
+
             </motion.div>
 
             {/* Pagination */}
@@ -844,7 +1195,7 @@ const InternshipTable = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.1, delay: 0.1 }}
-                className="flex justify-end items-center mt-6 px-4 gap-10" // 
+                className="flex flex-col sm:flex-row sm:justify-end sm:items-center gap-3 sm:gap-10 mt-4 px-2 sm:px-4"
                 style={{ color: colors.foreground }}
               >
                 {/* Rows per page section */}
