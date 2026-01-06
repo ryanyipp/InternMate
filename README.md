@@ -21,14 +21,14 @@ On the frontend, I used **React** and **Tailwind CSS** to redesign the UI with a
 
 The application includes:
 
-A searchable and filterable internship table
-Status-based tracking (Accepted, Rejected, Pending, Follow-up, Withdrawn)
-A follow-up notification system with overdue and upcoming reminders
-A dashboard with insights such as application trends and streaks
+- A searchable and filterable internship table
+- Status-based tracking (Accepted, Rejected, Pending, Follow-up, Withdrawn)
+- A follow-up notification system with overdue and upcoming reminders
+- A dashboard with insights such as application trends and streaks
 
 To support **mobile users**, the interface dynamically adapts:
-Mobile switches to a card-based vertical layout optimised for touch interaction
-Filters, actions, and follow-up controls are rearranged for smaller screens without losing functionality
+- Mobile switches to a card-based vertical layout optimised for touch interaction
+- Filters, actions, and follow-up controls are rearranged for smaller screens without losing functionality
 
 ---
 
