@@ -28,6 +28,7 @@ import { getThemeColors, getThemeShadows } from "../utils/theme";
 import { getUserById } from "../api/index.js";
 import GradientText from "../components/GradientText";
 import CommentModal from "../components/CommentModal";
+import Footer from "../components/Footer";
 
 const currentUserID = JSON.parse(localStorage.getItem("profile"))?.id;
 
@@ -415,7 +416,9 @@ const InternshipTable = () => {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -30 }}
         transition={{ duration: 0.15, ease: "easeOut" }}
-         className="relative min-h-screen flex items-start justify-center pt-2 p-4 overflow-hidden transition-all duration-300"
+        className="relative min-h-screen flex flex-col overflow-hidden transition-all duration-300"
+        
+
         style={{
           backgroundImage: `url(${bg})`,
           backgroundSize: "cover",  
@@ -423,7 +426,7 @@ const InternshipTable = () => {
           backgroundRepeat: "no-repeat",
           backgroundAttachment: "fixed",
         }}
-      >
+      ><div className="flex-1 flex justify-center px-4 pt-2">
         <div
           className="w-full max-w-8xl lg:scale-[0.90] lg:origin-top mx-auto rounded-3xl shadow-xl px-4 sm:px-6 py-3 flex flex-col transition-all duration-100"
           style={{
@@ -1272,9 +1275,9 @@ const InternshipTable = () => {
               </motion.div>
             )}
           </div>
-
-
         </div>
+      </div>
+        <Footer colors={colors} />
       </motion.div>
       {showModal && (
             <AddEntryModal

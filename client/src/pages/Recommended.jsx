@@ -5,6 +5,8 @@ import Navbar from "../components/NavBar";
 import { getThemeColors } from "../utils/theme";
 import { getInternship } from "../api/index";
 import { CartesianGrid, Area, AreaChart } from "recharts";
+import Loader from "../components/Loader";
+import Footer from "../components/Footer";
 
 
 import {
@@ -230,21 +232,32 @@ export default function Recommended({ isDark, toggleDarkMode }) {
     borderColor: colors.border,
     color: colors.foreground,
   };
-
+  if (loadingApps) {
+    return (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center"
+        style={{ background: colors.background }}
+      >
+        <Loader text="Loading your insights..." />
+      </div>
+    );
+  }
   return (
     <>
       <Navbar isDark={isDark} toggleDarkMode={toggleDarkMode} />
 
       <motion.div
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -18 }}
-        transition={{ duration: 0.2 }}
-        className="min-h-screen flex justify-center px-4 sm:px-8 py-10"
-        style={{ background: colors.background, color: colors.foreground }}
-      >
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -18 }}
+          transition={{ duration: 0.2 }}
+          className="min-h-screen flex flex-col"
+          style={{ background: colors.background, color: colors.foreground }}
+        >
+
         {/* ~80% center width */}
-        <div className="w-full max-w-[1400px]">
+        <div className="flex-1 w-full">
+    <div className="max-w-[1400px] mx-auto px-4 sm:px-8 pt-10">
           <div className="mb-6">
             <h2 className="text-4xl font-extrabold mb-1" style={{ color: colors.primary }}>
               Application Insights
@@ -429,10 +442,13 @@ export default function Recommended({ isDark, toggleDarkMode }) {
               </ResponsiveContainer>
             </div>
           </div>
+           </div>
 
 
           {/* keep the rest of your Recommended page below this (jobs, filters, etc) */}
+                 
         </div>
+        <Footer colors={colors} />
       </motion.div>
     </>
   );
@@ -465,6 +481,7 @@ function StatTile({ label, value, sublabel, Icon, colors }) {
           {sublabel}
         </p>
       ) : null}
+
     </div>
   );
 }
